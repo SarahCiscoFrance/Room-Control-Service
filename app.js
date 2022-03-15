@@ -14,6 +14,13 @@ const swaggerUI = require('swagger-ui-express');
 
 const swaggerOptions = {
   swaggerDefinition: {
+    securityDefinitions: {
+      ApiKeyAuth: {
+          type: 'apiKey',
+          name: 'API-Key',
+          in: 'header'
+      }
+    },
     components: {},
     info: {
       title: "Room Control API",
@@ -37,6 +44,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// enable CORS for all routes and for our specific API-Key header
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, API-Key')
+  next()
+})
+
+// PROTECT ALL ROUTES THAT FOLLOW
+app.use((req, res, next) => {
+  const apiKey = req.get('API-Key')
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    res.status(401).json({error: 'unauthorised'})
+  } else {
+    next()
+  }
+})
 
 app.use('/', indexRouter);
 

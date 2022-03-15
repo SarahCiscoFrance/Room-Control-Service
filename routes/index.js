@@ -16,9 +16,9 @@ router.get('/', function (req, res, next) {
  *       light_status:
  *         type: string
  *         enum: ["on", "off"]
- *       store_going_down:
+ *       blinds_going_down:
  *         type: boolean
- *       store_going_up:
+ *       blinds_going_up:
  *         type: boolean
  */
 
@@ -27,23 +27,25 @@ router.get('/', function (req, res, next) {
  * @swagger
  * /status:
  *   get:
+ *     security:
+ *       - ApiKeyAuth: []
  *     tags:
  *       - Status
- *     summary: Retrieve the status of the light and the store.
- *     description: Retrieve the status of the light and the store.
+ *     summary: Retrieve the status of the light and the blinds.
+ *     description: Retrieve the status of the light and the blinds.
  *       <br>The light can have the status "on" or "off"
- *       <br>For the store "store_going_down" can be "true" or "false" and "store_going_up" can be "true" or "false"
+ *       <br>For the blinds "blinds_going_down" can be "true" or "false" and "blinds_going_up" can be "true" or "false"
  *     responses:
  *       200:
- *         description: JSON describing the status of the light and the store
+ *         description: JSON describing the status of the light and the blinds
  *         schema:
  *           $ref: '#/definitions/Status'
  */
 router.get('/status', async function (req, res, next) {
   const info = {
     light_status: await getStatus(1, process.env.IP_RELAY_LIGHT) == "0" ? "off" : "on",
-    store_going_down: await getStatus(2, process.env.IP_RELAY_STORE) == "0" ? false : true,
-    store_going_up: await getStatus(1, process.env.IP_RELAY_STORE) == "0" ? false : true
+    blinds_going_down: await getStatus(2, process.env.IP_RELAY_BLINDS) == "0" ? false : true,
+    blinds_going_up: await getStatus(1, process.env.IP_RELAY_BLINDS) == "0" ? false : true
   }
   res.send(info)
 })
@@ -52,6 +54,8 @@ router.get('/status', async function (req, res, next) {
  * @swagger
  * /light/{mode}:
  *   get:
+ *     security:
+ *       - ApiKeyAuth: []
  *     tags:
  *       - Controller
  *     parameters:
@@ -93,8 +97,10 @@ router.get('/light/:mode', async function (req, res, next) {
 
 /**
  * @swagger
- * /store/{mode}:
+ * /blinds/{mode}:
  *   get:
+ *     security:
+ *       - ApiKeyAuth: []
  *     tags:
  *       - Controller
  *     parameters:
@@ -103,28 +109,28 @@ router.get('/light/:mode', async function (req, res, next) {
  *         schema:
  *           type: string
  *         required: true
- *         description: The mode of the store ("up" or "down")
- *     summary: Up/down the store in Van Gogh.
- *     description: Up/down the store in the room Van Gogh.
- *       <br>The store command has two mode "up" or "down"
- *       <br>Choose "up" to raise the store or "down" to lower the store
+ *         description: The mode of the blinds ("up" or "down")
+ *     summary: Up/down the blinds in Van Gogh.
+ *     description: Up/down the blinds in the room Van Gogh.
+ *       <br>The blinds command has two mode "up" or "down"
+ *       <br>Choose "up" to raise the blinds or "down" to lower the blinds
  *     responses:
  *       200:
  *         description: Success
  */
-router.get('/store/:mode', async function (req, res, next) {
+router.get('/blinds/:mode', async function (req, res, next) {
   const mode = req.params.mode
-  if (mode === 'down' && await getStatus(2, process.env.IP_RELAY_STORE) == "0") {
-    sendCommand(2, process.env.IP_RELAY_STORE);
+  if (mode === 'down' && await getStatus(2, process.env.IP_RELAY_BLINDS) == "0") {
+    sendCommand(2, process.env.IP_RELAY_BLINDS);
     setTimeout(function () {
-      sendCommand(2, process.env.IP_RELAY_STORE);
+      sendCommand(2, process.env.IP_RELAY_BLINDS);
     }, 20000);
     res.send("success")
   }
-  else if(mode === 'up' && await getStatus(1, process.env.IP_RELAY_STORE) == "0") {
-    sendCommand(1, process.env.IP_RELAY_STORE);
+  else if(mode === 'up' && await getStatus(1, process.env.IP_RELAY_BLINDS) == "0") {
+    sendCommand(1, process.env.IP_RELAY_BLINDS);
     setTimeout(function () {
-        sendCommand(1, process.env.IP_RELAY_STORE);
+        sendCommand(1, process.env.IP_RELAY_BLINDS);
     }, 20000);
     res.send("success")
   }else{
