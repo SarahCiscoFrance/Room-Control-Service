@@ -71,13 +71,21 @@ router.get('/status', async function (req, res, next) {
  */
 router.get('/light/:mode', async function (req, res, next) {
   const mode = req.params.mode
-  if (mode === 'on' && await getStatus(1, process.env.IP_RELAY_LIGHT) == "0") {
-    sendCommand(1, process.env.IP_RELAY_LIGHT);
-    res.send("success")
+  if (mode === 'on'){
+    if(await getStatus(1, process.env.IP_RELAY_LIGHT) == "0") {
+      sendCommand(1, process.env.IP_RELAY_LIGHT);
+      res.send("success")
+    }else{
+      res.send("light already on")
+    }
   }
-  else if (mode === 'off' && await getStatus(1, process.env.IP_RELAY_LIGHT) == "1"){
-    sendCommand(1, process.env.IP_RELAY_LIGHT);
-    res.send("success")
+  else if (mode === 'off'){
+    if(await getStatus(1, process.env.IP_RELAY_LIGHT) == "1"){
+      sendCommand(1, process.env.IP_RELAY_LIGHT);
+      res.send("success")
+    }else{
+      res.send("light already off")
+    }
   }else{
     res.send("bad request")
   }
