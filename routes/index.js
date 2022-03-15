@@ -56,7 +56,7 @@ router.get('/status', async function (req, res, next) {
  *       - Controller
  *     summary: Turn ON/OFF the light in Van Gogh.
  *     description: Set the light in the room Van Gogh.
- *       <br>The light has two mode "on" or "off"
+ *       <br>The light command has two mode "on" or "off"
  *       <br>Choose "on" to turn on the light or "off" to turn off the light
  *     responses:
  *       200:
@@ -85,7 +85,7 @@ router.get('/light/:mode', async function (req, res, next) {
  *     summary: Up/down the store in Van Gogh.
  *     description: Up/down the store in the room Van Gogh.
  *       <br>The store command has two mode "up" or "down"
- *       <br>Choose "up" to raise on the store or "down" to lower the store
+ *       <br>Choose "up" to raise the store or "down" to lower the store
  *     responses:
  *       200:
  *         description: Success
