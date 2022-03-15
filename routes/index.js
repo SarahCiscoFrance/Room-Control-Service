@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
  *     properties:
  *       light_status:
  *         type: string
- *         "enum": ["on", "off"]
+ *         enum: ["on", "off"]
  *       store_going_down:
  *         type: boolean
  *       store_going_up:
@@ -50,10 +50,17 @@ router.get('/status', async function (req, res, next) {
 
 /**
  * @swagger
- * /light/:mode:
+ * /light/{mode}:
  *   get:
  *     tags:
  *       - Controller
+ *     parameters:
+ *       - in: path
+ *         name: mode
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The mode of the light ("on" or "off")
  *     summary: Turn ON/OFF the light in Van Gogh.
  *     description: Set the light in the room Van Gogh.
  *       <br>The light command has two mode "on" or "off"
@@ -82,6 +89,13 @@ router.get('/light/:mode', async function (req, res, next) {
  *   get:
  *     tags:
  *       - Controller
+ *     parameters:
+ *       - in: path
+ *         name: mode
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The mode of the store ("up" or "down")
  *     summary: Up/down the store in Van Gogh.
  *     description: Up/down the store in the room Van Gogh.
  *       <br>The store command has two mode "up" or "down"
