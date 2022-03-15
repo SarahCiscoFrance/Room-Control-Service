@@ -64,7 +64,6 @@ router.get('/status', async function (req, res, next) {
  */
 router.get('/light/:mode', async function (req, res, next) {
   const mode = req.params.mode
-  console.log(mode,  await getStatus(1, process.env.IP_RELAY_LIGHT))
   if (mode === 'on' && await getStatus(1, process.env.IP_RELAY_LIGHT) == "0") {
     sendCommand(1, process.env.IP_RELAY_LIGHT);
     res.send("success")
