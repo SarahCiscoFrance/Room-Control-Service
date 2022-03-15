@@ -20,7 +20,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Documentation of the REST API Room Control an app to control IoT devices in the room Van Gogh'
     },
-    host: `http://websrv2.ciscofrance.com:${process.env.PORT}`
+    host: `websrv2.ciscofrance.com:${process.env.PORT}`
   },
   apis: ["routes/index.js"],
 };
