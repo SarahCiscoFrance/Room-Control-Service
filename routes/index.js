@@ -93,7 +93,7 @@ router.get('/light/:mode', async function (req, res, next) {
 
 /**
  * @swagger
- * /store/:mode:
+ * /store/{mode}:
  *   get:
  *     tags:
  *       - Controller
