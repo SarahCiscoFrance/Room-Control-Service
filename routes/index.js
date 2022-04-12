@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const {getStatus, sendCommand} = require('../lib/room-function.js')
+const {restoreMac} = require('../lib/computer-function.js')
 
 router.get('/', function (req, res, next) {
   res.render('index', {
@@ -135,6 +136,55 @@ router.get('/blinds/:mode', async function (req, res, next) {
     res.send("success")
   }else{
     res.send("bad request")
+  }
+});
+
+/**
+ * @swagger
+ * /restore/mac:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     tags:
+ *       - Controller
+ *     parameters:
+ *       - in: body
+ *         name: host
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Hostname or IP address of the server.
+ *       - in: body
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username for ssh authentication.
+ *       - in: body
+ *         name: password
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Password for password-based user ssh authentication.
+ *     summary: Set to default state the selected Mac computer in the Showroom.
+ *     description: Set to default state a Mac computer.
+ *       <br>This operation takes a few seconds.
+ *       <br>You must provide in the body the necessary information to establish the ssh connection 
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+ router.post('/restore/mac/', async function (req, res, next) {
+  const {host, username, password} = req.body;
+  if (host && username && password) {
+    await restoreMac(host, username, password).catch(err => {
+      console.log(err)
+      res.status(500).send(`Error: ${err.message}`);
+      return
+    })
+    res.send("success")
+  }else{
+    res.send("bad request: field missing...")
   }
 });
 
