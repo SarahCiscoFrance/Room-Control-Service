@@ -1,5 +1,10 @@
 #!/bin/bash
 
+-- Check Wi-Fi is On if not turn on
+set status to do shell script "networksetup -getairportpower en0"
+if status ends with "Off" then
+  do shell script "networksetup -setairportpower en0 on"
+end if
 
 -- Set speaker volume to 80%
 set volume output volume 80
@@ -21,7 +26,7 @@ end repeat
 
 -- Change the desktop background
 tell application "Finder"
-	set desktop picture to POSIX file "/Users/Sarah/Pictures/Virtual_Background_2.jpg"
+	set desktop picture to POSIX file "/Users/Automation/Background/Default_Background.jpg"
 end tell
 
 -- Force Webex to restart
