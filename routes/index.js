@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const {getStatus, sendCommand} = require('../lib/room-function.js')
-const {restoreMac} = require('../lib/computer-function.js')
+const {restoreMac, executeAppleScriptCode} = require('../lib/computer-function.js')
 
 router.get('/', function (req, res, next) {
   res.render('index', {
@@ -188,4 +188,68 @@ router.get('/blinds/:mode', async function (req, res, next) {
   }
 });
 
+
+/**
+ * @swagger
+ * /sendCommand/mac/:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     tags:
+ *       - Controller
+ *     parameters:
+ *       - in: body
+ *         name: host
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Hostname or IP address of the server.
+ *       - in: body
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username for ssh authentication.
+ *       - in: body
+ *         name: password
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Password for password-based user ssh authentication.
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: AppleScript code containing the commands to execute.
+ *     summary: Set to default state the selected Mac computer in the Showroom.
+ *     description: Set to default state a Mac computer.
+ *       <br>This operation takes a few seconds.
+ *       <br>You must provide in the body the necessary information to establish the ssh connection 
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+ router.post('/sendCommand/mac/', async function (req, res, next) {
+  const {host, username, password, body} = req.body;
+  if (host && username && password && body) {
+    try {
+      await executeAppleScriptCode(host, username, password, body)
+      res.send("success")
+    } catch (error) {
+      console.log(error)
+      if(error.level === 'client-timeout'){
+        res.status(400).send({message:'The IP address provided is incorrect'})
+      }
+      else if(error.level === 'client-authentication'){
+        res.status(400).send({message:'SSH authentication failed. Please check the provided credentials.'})
+      }
+      else{
+        res.status(400).send({message:'Something went wrong... Please check that there are no syntax errors in the Applescript code'})
+      }
+    }
+  }else{
+    res.status(400).send({message:"bad request: field missing..."})
+  }
+});
 module.exports = router;

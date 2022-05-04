@@ -1,5 +1,3 @@
-#!/bin/bash
-
 -- Check Wi-Fi is On if not turn on
 set status to do shell script "networksetup -getairportpower en0"
 if status ends with "Off" then
