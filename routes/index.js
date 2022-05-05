@@ -222,10 +222,10 @@ router.get('/blinds/:mode', async function (req, res, next) {
  *           type: string
  *         required: true
  *         description: AppleScript code containing the commands to execute.
- *     summary: Set to default state the selected Mac computer in the Showroom.
- *     description: Set to default state a Mac computer.
+ *     summary: Execute AppleScript commands on the selected Mac computer in the Showroom.
+ *     description: Execute AppleScript code on a Mac computer.
  *       <br>This operation takes a few seconds.
- *       <br>You must provide in the body the necessary information to establish the ssh connection 
+ *       <br>You must provide in the payload the necessary information to establish the ssh connection and the AppleScript code.
  *     responses:
  *       200:
  *         description: Success
