@@ -225,7 +225,7 @@ router.get('/blinds/:mode', async function (req, res, next) {
  *     summary: Execute AppleScript commands on the selected Mac computer in the Showroom.
  *     description: Execute AppleScript code on a Mac computer.
  *       <br>This operation takes a few seconds.
- *       <br>You must provide in the payload the necessary information to establish the ssh connection and the AppleScript code.
+ *       <br>You must provide in the payload the necessary information to establish the ssh connection. Also you need to provide the AppleScript code to execute.
  *     responses:
  *       200:
  *         description: Success
