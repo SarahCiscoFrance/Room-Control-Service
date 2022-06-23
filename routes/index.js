@@ -244,8 +244,11 @@ router.get('/blinds/:mode', async function (req, res, next) {
       else if(error.level === 'client-authentication'){
         res.status(400).send({message:'SSH authentication failed. Please check the provided credentials.'})
       }
+      else if(error === 'timed out'){
+        res.status(400).send({message:'Cannot perform actions. Computer is in StandBy Mode or Off.'})
+      }
       else{
-        res.status(400).send({message:'Something went wrong... Please check that there are no syntax errors in the Applescript code'})
+        res.status(400).send({message:'Something went wrong... Please check that there are no syntax errors in the Applescript code or that there are no permission requests required/pending on the computer.'})
       }
     }
   }else{
